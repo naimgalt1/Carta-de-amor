@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- ============================================================
+       ROMANTIC LANDING PAGE — Single File Edition
+       Designed with love. ❤️
+       ============================================================ -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Una pregunta especial para ti." />
+  <title>Para ti ❤️</title>
+
+  <!-- Google Fonts: Poppins + Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       CSS CUSTOM PROPERTIES (DESIGN TOKENS)
+       ============================================================ */
+    :root {
+      /* Palette */
+      --rose:        #F9C5D1;
+      --rose-deep:   #E8829A;
+      --rose-soft:   #FDE8EE;
+      --lavender:    #D9CFEF;
+      --lavender-soft:#EDE9F8;
+      --cream:       #FFF8F3;
+      --cream-dark:  #F5EDE8;
+      --white:       #FFFFFF;
+      --text-main:   #3D2B3D;
+      --text-light:  #7A6080;
+      --text-muted:  #B0A0B8;
+
+      /* Typography */
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'Poppins', system-ui, sans-serif;
+
+      /* Spacing scale */
+      --s-xs:  0.5rem;
+      --s-sm:  1rem;
+      --s-md:  2rem;
+      --s-lg:  4rem;
+      --s-xl:  6rem;
+
+      /* Effects */
+      --radius-sm:  12px;
+      --radius-md:  24px;
+      --radius-lg:  40px;
+      --shadow-soft: 0 8px 40px rgba(233,130,154,0.15);
+      --shadow-card: 0 20px 60px rgba(100,60,100,0.12);
+      --glass-bg:    rgba(255,255,255,0.55);
+      --glass-border:rgba(255,255,255,0.75);
+
+      /* Timing */
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* ============================================================
+       RESET & BASE
+       ============================================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--text-main);
+      background: var(--cream);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* ============================================================
+       ANIMATED GRADIENT BACKGROUND
+       ============================================================ */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background: linear-gradient(
+        135deg,
+        #FFF0F5 0%,
+        #EDE9F8 25%,
+        #FFF8F3 50%,
+        #FCE4EC 75%,
+        #EDE9F8 100%
+      );
+      background-size: 400% 400%;
+      animation: gradientShift 18s ease infinite;
+    }
+
+    @keyframes gradientShift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ============================================================
+       FLOATING PARTICLES CANVAS
+       ============================================================ */
+    #particles-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* ============================================================
+       SCROLL PROGRESS BAR
+       ============================================================ */
+    #scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--rose-deep), var(--lavender));
+      z-index: 1000;
+      transition: width 0.1s linear;
+      border-radius: 0 2px 2px 0;
+    }
+
+    /* ============================================================
+       ANIMATIONS — UTILITY CLASSES
+       (Applied via IntersectionObserver)
+       ============================================================ */
+    .anim-ready {
+      opacity: 0;
+      will-change: opacity, transform;
+    }
+
+    .anim-fade-up   { transform: translateY(40px); }
+    .anim-fade-left { transform: translateX(-50px); }
+    .anim-fade-right{ transform: translateX(50px); }
+    .anim-scale     { transform: scale(0.88); }
+    .anim-blur      { filter: blur(12px); transform: translateY(20px); }
+
+    .anim-visible {
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+      transition:
+        opacity 0.8s var(--ease-out-expo),
+        transform 0.8s var(--ease-out-expo),
+        filter 0.8s var(--ease-out-expo);
+    }
+
+    /* Stagger children */
+    .stagger-children > * {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    .stagger-children.anim-visible > * {
+      opacity: 1;
+      transform: none;
+      transition:
+        opacity 0.7s var(--ease-out-expo),
+        transform 0.7s var(--ease-out-expo);
+    }
+    .stagger-children.anim-visible > *:nth-child(1) { transition-delay: 0.05s; }
+    .stagger-children.anim-visible > *:nth-child(2) { transition-delay: 0.15s; }
+    .stagger-children.anim-visible > *:nth-child(3) { transition-delay: 0.25s; }
+    .stagger-children.anim-visible > *:nth-child(4) { transition-delay: 0.35s; }
+
+    /* Floating keyframe */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-12px); }
+    }
+
+    /* Pulse keyframe */
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); box-shadow: var(--shadow-soft); }
+      50%       { transform: scale(1.04); box-shadow: 0 12px 50px rgba(233,130,154,0.30); }
+    }
+
+    /* Shimmer */
+    @keyframes shimmer {
+      0%   { background-position: -200% 0; }
+      100% { background-position:  200% 0; }
+    }
+
+    /* ============================================================
+       ██████  HERO SECTION
+       ============================================================ */
+    #hero {
+      position: relative;
+      height: 100svh;
+      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    /* ── Hero photo ─────────────────────────────────────────── */
+    #hero-photo-wrap {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    #hero-photo {
+      /* CAMBIAR FOTO: reemplaza este src con la URL o ruta de tu foto */
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      transform: scale(1.08);
+      animation: heroZoom 20s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+
+    @keyframes heroZoom {
+      from { transform: scale(1.08); }
+      to   { transform: scale(1.15); }
+    }
+
+    /* Gradient overlay for legibility */
+    #hero-photo-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(61,43,61,0.15) 0%,
+        rgba(61,43,61,0.05) 30%,
+        rgba(61,43,61,0.45) 70%,
+        rgba(61,43,61,0.72) 100%
+      );
+    }
+
+    /* ── Hero content ────────────────────────────────────────── */
+    #hero-content {
+      position: relative;
+      z-index: 1;
+      padding: 0 var(--s-md);
+      max-width: 680px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--rose);
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      backdrop-filter: blur(8px);
+      padding: 6px 16px;
+      border-radius: 100px;
+      margin-bottom: var(--s-md);
+      opacity: 0;
+      animation: slideDown 0.9s 0.3s var(--ease-out-expo) forwards;
+    }
+
+    @keyframes slideDown {
+      from { opacity:0; transform: translateY(-20px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+
+    /* CAMBIAR TEXTO: título principal */
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 8vw, 5rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: var(--s-sm);
+      opacity: 0;
+      animation: heroFadeUp 1s 0.55s var(--ease-out-expo) forwards;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--rose);
+    }
+
+    /* CAMBIAR TEXTO: subtítulo */
+    .hero-subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      font-weight: 300;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.7;
+      max-width: 480px;
+      margin: 0 auto var(--s-lg);
+      opacity: 0;
+      animation: heroFadeUp 1s 0.75s var(--ease-out-expo) forwards;
+    }
+
+    @keyframes heroFadeUp {
+      from { opacity:0; transform: translateY(30px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.18);
+      border: 1.5px solid rgba(255,255,255,0.45);
+      backdrop-filter: blur(12px);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 14px 32px;
+      border-radius: 100px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.3s, border-color 0.3s, transform 0.3s var(--ease-spring);
+      opacity: 0;
+      animation: heroFadeUp 1s 0.95s var(--ease-out-expo) forwards;
+    }
+
+    .hero-cta:hover,
+    .hero-cta:focus-visible {
+      background: rgba(255,255,255,0.28);
+      border-color: rgba(255,255,255,0.7);
+      transform: translateY(-2px);
+      outline: none;
+    }
+
+    /* ── Scroll indicator ────────────────────────────────────── */
+    #scroll-indicator {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      opacity: 0;
+      animation: heroFadeUp 1s 1.3s var(--ease-out-expo) forwards;
+    }
+
+    .scroll-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .scroll-mouse {
+      width: 22px;
+      height: 36px;
+      border: 2px solid rgba(255,255,255,0.45);
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      padding-top: 6px;
+    }
+
+    .scroll-wheel {
+      width: 3px;
+      height: 8px;
+      background: rgba(255,255,255,0.7);
+      border-radius: 3px;
+      animation: scrollWheel 1.8s ease-in-out infinite;
+    }
+
+    @keyframes scrollWheel {
+      0%   { opacity:1; transform: translateY(0); }
+      60%  { opacity:0; transform: translateY(10px); }
+      61%  { opacity:0; transform: translateY(0); }
+      100% { opacity:1; transform: translateY(0); }
+    }
+
+    /* ============================================================
+       ██████  SECTION WRAPPER UTILITIES
+       ============================================================ */
+    .section {
+      padding: var(--s-xl) var(--s-md);
+      position: relative;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-eyebrow {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--rose-deep);
+      margin-bottom: var(--s-sm);
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      margin-bottom: var(--s-md);
+    }
+
+    .section-title em {
+      font-style: italic;
+      color: var(--rose-deep);
+    }
+
+    .section-body {
+      font-size: 1.05rem;
+      font-weight: 300;
+      line-height: 1.85;
+      color: var(--text-light);
+      max-width: 520px;
+    }
+
+    /* ============================================================
+       ██████  ABOUT / SECOND SECTION
+       ============================================================ */
+    #about {
+      background: transparent;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--s-lg);
+      align-items: center;
+    }
+
+    @media (min-width: 768px) {
+      .about-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: clamp(3rem, 6vw, 6rem);
+      }
+    }
+
+    /* ── About photo ─────────────────────────────────────────── */
+    .about-photo-wrap {
+      position: relative;
+    }
+
+    .about-photo-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -12px;
+      border-radius: calc(var(--radius-lg) + 12px);
+      background: linear-gradient(135deg, var(--rose-soft), var(--lavender-soft));
+      z-index: 0;
+    }
+
+    .about-photo {
+      /* CAMBIAR FOTO: reemplaza el src con la segunda fotografía */
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      transition: transform 0.5s var(--ease-out-expo), box-shadow 0.5s ease;
+    }
+
+    .about-photo-wrap:hover .about-photo {
+      transform: scale(1.02) translateY(-4px);
+      box-shadow: 0 30px 80px rgba(100,60,100,0.18);
+    }
+
+    /* Floating badge */
+    .about-badge {
+      position: absolute;
+      bottom: -16px;
+      right: -8px;
+      z-index: 2;
+      background: var(--white);
+      border-radius: var(--radius-md);
+      padding: 12px 20px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .about-badge-icon {
+      font-size: 1.5rem;
+    }
+
+    .about-badge-text {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.3;
+    }
+
+    .about-badge-text span {
+      display: block;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    /* ── About text ──────────────────────────────────────────── */
+    .about-text {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-md);
+    }
+
+    .about-text .section-body + .section-body {
+      margin-top: -0.5rem;
+    }
+
+    /* Typing effect container */
+    .typing-wrap {
+      display: inline-block;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--rose-deep);
+    }
+
+    .typing-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.1em;
+      background: var(--rose-deep);
+      margin-left: 2px;
+      vertical-align: middle;
+      animation: blink 0.9s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    /* ============================================================
+       ██████  SEPARATOR
+       ============================================================ */
+    #separator {
+      padding: var(--s-lg) var(--s-md);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sep-inner {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--s-sm);
+    }
+
+    .sep-hearts {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .sep-heart {
+      font-size: 1.2rem;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .sep-heart:nth-child(2) { animation-delay: 0.3s; font-size: 1.6rem; }
+    .sep-heart:nth-child(3) { animation-delay: 0.6s; }
+
+    .sep-line {
+      display: flex;
+      align-items: center;
+      gap: var(--s-md);
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .sep-rule {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--rose), transparent);
+    }
+
+    /* CAMBIAR TEXTO: frase del separador */
+    .sep-phrase {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--text-light);
+      white-space: nowrap;
+    }
+
+    /* ============================================================
+       ██████  FINAL / PROPOSAL SECTION
+       ============================================================ */
+    #proposal {
+      position: relative;
+      padding: var(--s-xl) var(--s-md);
+      overflow: hidden;
+      text-align: center;
+    }
+
+    #proposal::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, var(--lavender-soft) 0%, var(--rose-soft) 60%, var(--cream) 100%);
+      z-index: 0;
+    }
+
+    .proposal-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* Floating hearts behind proposal */
+    .proposal-hearts {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .p-heart {
+      position: absolute;
+      font-size: 1.4rem;
+      opacity: 0.18;
+      animation: floatHeart var(--dur, 6s) ease-in-out infinite;
+      animation-delay: var(--delay, 0s);
+    }
+
+    @keyframes floatHeart {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50%       { transform: translateY(-25px) rotate(8deg); }
+    }
+
+    .proposal-eyebrow {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--rose-deep);
+      margin-bottom: var(--s-sm);
+    }
+
+    .proposal-intro {
+      font-size: clamp(1rem, 2.5vw, 1.15rem);
+      font-weight: 300;
+      color: var(--text-light);
+      line-height: 1.8;
+      margin-bottom: var(--s-lg);
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ── The big question ────────────────────────────────────── */
+    .proposal-question {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 6vw, 3.8rem);
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.1;
+      margin-bottom: var(--s-lg);
+      letter-spacing: -0.02em;
+    }
+
+    .proposal-question em {
+      font-style: italic;
+      color: var(--rose-deep);
+    }
+
+    /* ── Glass card ──────────────────────────────────────────── */
+    .proposal-card {
+      background: var(--glass-bg);
+      border: 1.5px solid var(--glass-border);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius-lg);
+      padding: clamp(2rem, 5vw, 3.5rem);
+      box-shadow: var(--shadow-card);
+      margin-bottom: var(--s-md);
+    }
+
+    /* ── Buttons wrapper ─────────────────────────────────────── */
+    .proposal-buttons {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--s-md);
+      flex-wrap: wrap;
+    }
+
+    /* YES button */
+    .btn-yes {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--rose-deep) 0%, #C96B85 100%);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 600;
+      padding: 16px 40px;
+      border: none;
+      border-radius: 100px;
+      cursor: pointer;
+      box-shadow: 0 8px 30px rgba(233,130,154,0.40);
+      transition: transform 0.25s var(--ease-spring), box-shadow 0.25s ease;
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+
+    .btn-yes:hover,
+    .btn-yes:focus-visible {
+      transform: scale(1.06) translateY(-2px);
+      box-shadow: 0 14px 40px rgba(233,130,154,0.55);
+      outline: none;
+      animation: none;
+    }
+
+    /* NO button */
+    .btn-no {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.6);
+      border: 1.5px solid rgba(200,180,200,0.5);
+      color: var(--text-light);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 14px 32px;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: transform 0.18s var(--ease-spring), box-shadow 0.18s ease;
+      /* Positioned via JS on mobile */
+      position: relative;
+    }
+
+    .btn-no:hover {
+      /* Desktop hover escape handled via JS */
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    /* ============================================================
+       ██████  YES CELEBRATION OVERLAY
+       ============================================================ */
+    #celebration {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: linear-gradient(160deg, #FFF0F5 0%, #EDE9F8 100%);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: var(--s-md);
+      overflow: hidden;
+    }
+
+    #celebration.active {
+      display: flex;
+    }
+
+    .celebration-content {
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      transform: scale(0.85) translateY(30px);
+      transition: opacity 0.7s 0.4s var(--ease-out-expo),
+                  transform 0.7s 0.4s var(--ease-spring);
+    }
+
+    .celebration-content.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    .celebration-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 7vw, 4.5rem);
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.1;
+      margin-bottom: var(--s-sm);
+    }
+
+    .celebration-sub {
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      font-weight: 300;
+      color: var(--text-light);
+    }
+
+    /* Confetti pieces */
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      top: -20px;
+      animation: confettiFall var(--fall-dur, 3s) var(--fall-delay, 0s) linear forwards;
+      pointer-events: none;
+    }
+
+    @keyframes confettiFall {
+      0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+      80%  { opacity: 1; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* Rain hearts */
+    .rain-heart {
+      position: absolute;
+      top: -50px;
+      font-size: 1.5rem;
+      animation: heartRain var(--rain-dur, 4s) var(--rain-delay, 0s) ease-in forwards;
+      pointer-events: none;
+    }
+
+    @keyframes heartRain {
+      0%   { transform: translateY(0) rotate(-10deg); opacity: 0.9; }
+      100% { transform: translateY(110vh) rotate(20deg); opacity: 0; }
+    }
+
+    /* ============================================================
+       ██████  FOOTER
+       ============================================================ */
+    footer {
+      text-align: center;
+      padding: var(--s-md);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    /* ============================================================
+       RESPONSIVE FINE-TUNING
+       ============================================================ */
+    @media (max-width: 480px) {
+      :root {
+        --s-xl: 4rem;
+        --s-lg: 3rem;
+      }
+
+      .proposal-buttons {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .btn-yes, .btn-no {
+        justify-content: center;
+      }
+    }
+
+    /* ── Reduced motion respect ──────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ── Image placeholder (when no photo set) ───────────────── */
+    .photo-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      background: linear-gradient(135deg, var(--rose-soft) 0%, var(--lavender-soft) 100%);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .photo-placeholder .ph-icon {
+      font-size: 3rem;
+      opacity: 0.5;
+    }
+
+    /* Glowing dots on hero */
+    .glow-dot {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      pointer-events: none;
+      opacity: 0.35;
+      z-index: 0;
+    }
+
+    .glow-dot-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--rose);
+      top: -100px;
+      right: -100px;
+      animation: floatGlow 12s ease-in-out infinite alternate;
+    }
+
+    .glow-dot-2 {
+      width: 300px;
+      height: 300px;
+      background: var(--lavender);
+      bottom: 0;
+      left: -80px;
+      animation: floatGlow 15s ease-in-out infinite alternate-reverse;
+    }
+
+    @keyframes floatGlow {
+      from { transform: translate(0, 0); }
+      to   { transform: translate(30px, 20px); }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── Scroll progress bar ── -->
+  <div id="scroll-progress" role="progressbar" aria-label="Progreso de lectura"></div>
+
+  <!-- ── Background particle canvas ── -->
+  <canvas id="particles-canvas" aria-hidden="true"></canvas>
+
+  <!-- ================================================================
+       █  HERO SECTION
+       ================================================================ -->
+  <section id="hero" aria-label="Portada">
+
+    <!-- Decorative glows -->
+    <div class="glow-dot glow-dot-1" aria-hidden="true"></div>
+    <div class="glow-dot glow-dot-2" aria-hidden="true"></div>
+
+    <!-- CAMBIAR FOTO: Foto principal -->
+    <div id="hero-photo-wrap" aria-hidden="true">
+      <!--
+        ╔══════════════════════════════════════════════════════╗
+        ║  CAMBIAR FOTO  — Foto principal (Hero)               ║
+        ║  Opción A: <img> con una URL de internet             ║
+        ║  Opción B: src="./tu-foto.jpg" (misma carpeta)       ║
+        ╚══════════════════════════════════════════════════════╝
+        Descomenta el <img> y borra el div.photo-placeholder
+      -->
+      <!-- <img id="hero-photo" src="TU_FOTO_AQUI.jpg" alt="" /> -->
+      <div id="hero-photo" style="
+        display:flex; align-items:center; justify-content:center;
+        flex-direction:column; gap:1rem;
+        background: linear-gradient(135deg,#F9C5D1,#D9CFEF);
+        height:100%; color:rgba(100,60,100,0.45); text-align:center;">
+        <div style="font-size:4rem;">📸</div>
+        <div style="font-size:0.85rem; letter-spacing:0.1em; text-transform:uppercase; font-family:'Poppins',sans-serif;">
+          Coloca aquí tu foto principal
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero text -->
+    <div id="hero-content" role="banner">
+
+      <!-- CAMBIAR TEXTO: Eyebrow label -->
+      <p class="hero-eyebrow" aria-hidden="true">
+        <span>✨</span>
+        <span>Para una colombiana muy especial</span>
+      </p>
+
+      <!-- CAMBIAR TEXTO: Título Hero -->
+      <h1 class="hero-title">
+        Quiero disfrutar mas momentos<br>
+        <em>contigo</em> 
+      </h1>
+
+      <!-- CAMBIAR TEXTO: Subtítulo Hero -->
+      <p class="hero-subtitle">
+        Hay cosas que merecen mas que unas palabras.<br>
+        Esto es un intento de mostrarte lo que siento.
+      </p>
+
+      <!-- Scroll CTA -->
+      <a href="#about" class="hero-cta" aria-label="Ver más">
+        <span>Sigue bajando preciosa</span>
+        <span aria-hidden="true">↓</span>
+      </a>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div id="scroll-indicator" aria-hidden="true">
+      <div class="scroll-mouse">
+        <div class="scroll-wheel"></div>
+      </div>
+      <span class="scroll-label">Desliza</span>
+    </div>
+
+  </section>
+
+  <!-- ================================================================
+       █  ABOUT / SECOND SECTION
+       ================================================================ -->
+  <section id="about" class="section" aria-label="Nuestra historia">
+    <div class="container">
+      <div class="about-grid">
+
+        <!-- ── Left: Photo ── -->
+        <div class="about-photo-wrap anim-ready anim-fade-left">
+
+          <!--
+            ╔══════════════════════════════════════════════════════╗
+            ║  CAMBIAR FOTO  — Segunda fotografía (sección About)  ║
+            ╚══════════════════════════════════════════════════════╝
+            Descomenta el <img> y borra el div interior
+          -->
+          <!-- <img class="about-photo" src="TU_SEGUNDA_FOTO.jpg" alt="Nosotros" /> -->
+          <div class="about-photo" style="
+            display:flex; align-items:center; justify-content:center;
+            flex-direction:column; gap:1rem;
+            background: linear-gradient(135deg,#EDE9F8,#FDE8EE);
+            color:rgba(100,60,100,0.4); text-align:center;">
+            <div style="font-size:3rem;">🌸</div>
+            <div style="font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; font-family:'Poppins',sans-serif;">
+              Coloca aquí tu segunda foto
+            </div>
+          </div>
+
+          <!-- Floating badge -->
+          <div class="about-badge" aria-hidden="true">
+            <span class="about-badge-icon">💌</span>
+            <div class="about-badge-text">
+              <!-- CAMBIAR TEXTO: Badge de la foto -->
+              Siempre en mi mente
+              <span>Desde el primer momento</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ── Right: Text ── -->
+        <div class="about-text stagger-children anim-ready anim-fade-right">
+
+          <p class="section-eyebrow">Mi disculpa</p>
+
+          <!-- CAMBIAR TEXTO: Título de la sección -->
+          <h2 class="section-title">
+            Lo que siento<br>
+            cuando pienso <em>y no hablo</em>
+          </h2>
+
+          <!-- Typing phrase -->
+          <div class="typing-wrap" aria-live="polite">
+            <span id="typing-text"></span><span class="typing-cursor" aria-hidden="true"></span>
+          </div>
+
+          <!-- CAMBIAR TEXTO: Párrafos principales -->
+          <p class="section-body">
+            Liz, hay cosas que necesito decirte y que durante semanas no supe cómo. Las últimas
+            semanas no he sido la persona que quiero ser contigo, y lo sé. Cuando mi vida se pone
+            cuesta arriba, me encierro. No porque no me importe, sino porque es la única manera
+            que conozco de seguir adelante sin que todo se derrumbe. Es un defecto que estoy
+            aprendiendo a reconocer, y tú eres la razón más importante por la que quiero cambiarlo.
+          </p>
+
+          <p class="section-body">
+            Mi situación económica no está bien, y eso me ha pesado más de lo que parece. Porque
+            cuando pienso en ti, quiero darte lo mejor. Quiero planes, quiero momentos, quiero que
+            sientas que eres una prioridad, no una promesa pospuesta. No poder darte eso como
+            quisiera me ha bloqueado, me ha cohíbido, y sin quererlo te ha alejado de mí. No
+            esperaba que durara tanto. No esperaba distanciarme tanto.
+          </p>
+
+          <p class="section-body">
+            Pero aquí estoy. Sin ser perfecto, sin el momento ideal, sin todo lo que me
+            gustaría ofrecerte. Solo con esto: que eres la persona en la que pienso cuando quiero
+            que algo salga bien. Y quería que lo supieras antes de preguntarte lo que llevo tiempo
+            queriendo preguntarte.
+          </p>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       █  SEPARATOR
+       ================================================================ -->
+  <div id="separator" role="separator" aria-hidden="true">
+    <div class="sep-inner anim-ready anim-scale">
+      <div class="sep-hearts">
+        <span class="sep-heart">🫶</span>
+        <span class="sep-heart">🫶</span>
+        <span class="sep-heart">🫶</span>
+      </div>
+      <div class="sep-line">
+        <div class="sep-rule"></div>
+        <!-- CAMBIAR TEXTO: Frase del separador -->
+        <span class="sep-phrase">porque la vida es mejor contigo mi rolita</span>
+        <div class="sep-rule"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================
+       █  PROPOSAL SECTION
+       ================================================================ -->
+  <section id="proposal" aria-label="La pregunta">
+
+    <!-- Floating background hearts -->
+    <div class="proposal-hearts" aria-hidden="true">
+      <span class="p-heart" style="left:8%;  top:15%; --dur:7s;  --delay:0s;">🫶</span>
+      <span class="p-heart" style="left:20%; top:70%; --dur:9s;  --delay:1s;">🫶</span>
+      <span class="p-heart" style="left:75%; top:10%; --dur:8s;  --delay:0.5s;">🫶</span>
+      <span class="p-heart" style="left:85%; top:60%; --dur:6s;  --delay:1.5s;">🫶</span>
+      <span class="p-heart" style="left:50%; top:80%; --dur:10s; --delay:2s;">🫶</span>
+      <span class="p-heart" style="left:38%; top:5%;  --dur:7.5s;--delay:0.8s;">🫶</span>
+    </div>
+
+    <div class="proposal-inner">
+
+      <p class="proposal-eyebrow anim-ready anim-fade-up">El momento que queria que llegara ya </p>
+
+      <!-- CAMBIAR TEXTO: Título proposal -->
+      <h2 class="section-title anim-ready anim-fade-up" style="font-size:clamp(2rem,6vw,3.5rem);">
+        Y aquí<br>
+        <em>la pregunta</em>
+      </h2>
+
+      <!-- CAMBIAR TEXTO: Introducción -->
+      <p class="proposal-intro anim-ready anim-fade-up">
+        He pensado en mil formas de preguntarlo. Ninguna me parecía suficientemente fantastica.
+        Por eso decidí hacer algo que se estuviera siempre. Algo que pudiera permanecer.
+      </p>
+
+      <!-- Glass card with the question + buttons -->
+      <div class="proposal-card anim-ready anim-scale">
+
+        <div class="proposal-question">
+          <!-- CAMBIAR TEXTO: La pregunta -->
+          ¿Quieres <em>salir conmigo?</em>
+        </div>
+
+        <div class="proposal-buttons" id="proposal-buttons">
+          <!-- YES -->
+          <button
+            class="btn-yes"
+            id="btn-yes"
+            aria-label="Sí, quiero salir contigo"
+            onclick="handleYes()"
+          >
+            🤩 Sí, quiero
+          </button>
+
+          <!-- NO — escapa en desktop, salta en móvil -->
+          <button
+            class="btn-no"
+            id="btn-no"
+            aria-label="No (casi imposible de pulsar)"
+          >
+            😔 No
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================================================================
+       █  CELEBRATION OVERLAY
+       ================================================================ -->
+  <div id="celebration" role="dialog" aria-modal="true" aria-label="¡Dijiste que sí!">
+    <!-- JS inserts confetti + hearts here -->
+
+    <div class="celebration-content" id="celebration-content">
+      <!-- CAMBIAR TEXTO: Mensaje final -->
+      <div style="font-size:clamp(3rem,10vw,6rem); margin-bottom:1rem; animation:float 3s ease-in-out infinite;">
+        ❤️
+      </div>
+      <h2 class="celebration-title">Estaba esperando este momento</h2>
+      <p class="celebration-sub">Siempre en mi cabecita 🫶</p>
+    </div>
+  </div>
+
+  <!-- ================================================================
+       █  FOOTER
+       ================================================================ -->
+  <footer>
+    <p>Hecho con amor especialmente para ti, reina.</p>
+  </footer>
+
+  <!-- ================================================================
+       JAVASCRIPT
+       ================================================================ -->
+  <script>
+    'use strict';
+
+    /* ============================================================
+       UTILITY: throttle
+       ============================================================ */
+    function throttle(fn, ms) {
+      let last = 0;
+      return function (...args) {
+        const now = Date.now();
+        if (now - last >= ms) { last = now; fn.apply(this, args); }
+      };
+    }
+
+    /* ============================================================
+       1. SCROLL PROGRESS BAR
+       ============================================================ */
+    const progressBar = document.getElementById('scroll-progress');
+
+    function updateProgress() {
+      const scrollTop    = window.scrollY;
+      const docHeight    = document.documentElement.scrollHeight - window.innerHeight;
+      const pct          = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = pct + '%';
+    }
+
+    window.addEventListener('scroll', throttle(updateProgress, 16), { passive: true });
+
+    /* ============================================================
+       2. PARTICLES + FLOATING HEARTS CANVAS
+       ============================================================ */
+    (function initParticles() {
+      const canvas = document.getElementById('particles-canvas');
+      const ctx    = canvas.getContext('2d');
+      let W, H, particles = [], hearts = [];
+
+      function resize() {
+        W = canvas.width  = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+
+      /* Particle class */
+      class Particle {
+        constructor() { this.reset(); }
+        reset() {
+          this.x    = Math.random() * W;
+          this.y    = Math.random() * H;
+          this.r    = Math.random() * 2 + 0.5;
+          this.vx   = (Math.random() - 0.5) * 0.3;
+          this.vy   = -Math.random() * 0.4 - 0.1;
+          this.life = 1;
+          this.dec  = Math.random() * 0.003 + 0.001;
+          // Pastel colors
+          const hues = [340, 300, 260, 30];
+          this.hue  = hues[Math.floor(Math.random() * hues.length)];
+        }
+        update() {
+          this.x    += this.vx;
+          this.y    += this.vy;
+          this.life -= this.dec;
+          if (this.life <= 0 || this.y < -10) this.reset();
+        }
+        draw() {
+          ctx.save();
+          ctx.globalAlpha = this.life * 0.45;
+          ctx.fillStyle   = `hsl(${this.hue},70%,82%)`;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      /* Floating heart class */
+      class FloatingHeart {
+        constructor() { this.reset(); }
+        reset() {
+          this.x     = Math.random() * W;
+          this.y     = H + 30;
+          this.size  = Math.random() * 14 + 8;
+          this.speed = Math.random() * 0.6 + 0.25;
+          this.drift = (Math.random() - 0.5) * 0.4;
+          this.alpha = Math.random() * 0.12 + 0.05;
+          this.phase = Math.random() * Math.PI * 2;
+        }
+        update() {
+          this.y     -= this.speed;
+          this.x     += Math.sin(this.phase + this.y * 0.008) * this.drift;
+          this.phase += 0.01;
+          if (this.y < -40) this.reset();
+        }
+        draw() {
+          ctx.save();
+          ctx.globalAlpha = this.alpha;
+          ctx.fillStyle   = '#F9C5D1';
+          drawHeart(ctx, this.x, this.y, this.size);
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      /* Draw heart shape */
+      function drawHeart(c, x, y, size) {
+        const s = size * 0.5;
+        c.beginPath();
+        c.moveTo(x, y + s * 0.4);
+        c.bezierCurveTo(x,           y - s * 0.4,  x - s,       y - s * 0.4, x - s, y + s * 0.1);
+        c.bezierCurveTo(x - s,       y + s * 0.8,  x,           y + s * 1.2, x,     y + s * 1.4);
+        c.bezierCurveTo(x,           y + s * 1.2,  x + s,       y + s * 0.8, x + s, y + s * 0.1);
+        c.bezierCurveTo(x + s,       y - s * 0.4,  x,           y - s * 0.4, x,     y + s * 0.4);
+        c.closePath();
+      }
+
+      /* Init */
+      resize();
+      window.addEventListener('resize', throttle(resize, 200));
+
+      const PARTICLE_COUNT = Math.min(60, Math.floor(W / 20));
+      const HEART_COUNT    = Math.min(10, Math.floor(W / 100));
+
+      for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
+      for (let i = 0; i < HEART_COUNT;   i++) {
+        const h = new FloatingHeart();
+        h.y = Math.random() * H; // scatter initially
+        hearts.push(h);
+      }
+
+      /* Loop */
+      function loop() {
+        ctx.clearRect(0, 0, W, H);
+        for (const p of particles) { p.update(); p.draw(); }
+        for (const h of hearts)    { h.update(); h.draw(); }
+        requestAnimationFrame(loop);
+      }
+      loop();
+    })();
+
+    /* ============================================================
+       3. INTERSECTION OBSERVER — Scroll animations
+       ============================================================ */
+    (function initScrollAnimations() {
+      const targets = document.querySelectorAll('.anim-ready, .stagger-children');
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('anim-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -40px 0px'
+      });
+
+      targets.forEach(el => observer.observe(el));
+    })();
+
+    /* ============================================================
+       4. HERO PARALLAX (light, transform only)
+       ============================================================ */
+    (function initParallax() {
+      const photoWrap = document.getElementById('hero-photo-wrap');
+      const hero      = document.getElementById('hero');
+      const heroH     = hero.offsetHeight;
+
+      function onScroll() {
+        const y   = window.scrollY;
+        if (y > heroH) return;
+        const pct = y / heroH;
+        photoWrap.style.transform = `translateY(${pct * 18}%)`;
+      }
+
+      window.addEventListener('scroll', throttle(onScroll, 16), { passive: true });
+    })();
+
+    /* ============================================================
+       5. TYPING EFFECT
+       ============================================================ */
+    (function initTyping() {
+      // CAMBIAR TEXTO: Frases del efecto typing
+      const phrases = [
+        'Liz, esto lleva tiempo en mi cabeza.',
+        'Contigo quiero ser mejor persona.',
+        'Te debo más presencia, y lo sé.',
+        'Y lo que siento por ti no ha cambiado nada.',
+      ];
+
+      const el     = document.getElementById('typing-text');
+      let   pi     = 0;
+      let   ci     = 0;
+      let   deleting = false;
+      let   timeout;
+
+      function type() {
+        const current = phrases[pi];
+
+        if (!deleting) {
+          el.textContent = current.slice(0, ++ci);
+          if (ci === current.length) {
+            deleting = true;
+            timeout  = setTimeout(type, 2200);
+            return;
+          }
+        } else {
+          el.textContent = current.slice(0, --ci);
+          if (ci === 0) {
+            deleting = false;
+            pi = (pi + 1) % phrases.length;
+            timeout = setTimeout(type, 400);
+            return;
+          }
+        }
+        timeout = setTimeout(type, deleting ? 40 : 65);
+      }
+
+      // Start after first scroll into view
+      const typingEl = document.querySelector('.typing-wrap');
+      const obs = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) { type(); obs.disconnect(); }
+      }, { threshold: 0.5 });
+      obs.observe(typingEl);
+    })();
+
+    /* ============================================================
+       6. "NO" BUTTON — Escape on desktop / Jump on mobile
+       ============================================================ */
+    (function initNoButton() {
+      const btn       = document.getElementById('btn-no');
+      const container = document.getElementById('proposal-buttons');
+      const isMobile  = () => window.matchMedia('(pointer:coarse)').matches;
+
+      /* ── Desktop: flee from cursor ── */
+      btn.addEventListener('mousemove', function (e) {
+        if (isMobile()) return;
+
+        const rect     = btn.getBoundingClientRect();
+        const cx       = rect.left + rect.width  / 2;
+        const cy       = rect.top  + rect.height / 2;
+        const dx       = e.clientX - cx;
+        const dy       = e.clientY - cy;
+        const dist     = Math.sqrt(dx * dx + dy * dy);
+        const flee     = 130;
+
+        if (dist < flee) {
+          const angle  = Math.atan2(dy, dx);
+          const move   = flee - dist + 20;
+          const nx     = rect.left - Math.cos(angle) * move;
+          const ny     = rect.top  - Math.sin(angle) * move;
+
+          // Clamp within viewport
+          const clamped = clampToViewport(nx, ny, rect.width, rect.height);
+
+          btn.style.position = 'fixed';
+          btn.style.left     = clamped.x + 'px';
+          btn.style.top      = clamped.y + 'px';
+          btn.style.margin   = '0';
+          btn.style.zIndex   = '10';
+          btn.style.transition = 'left 0.2s ease, top 0.2s ease';
+        }
+      });
+
+      /* ── Mobile: jump on touch ── */
+      btn.addEventListener('touchstart', function (e) {
+        e.preventDefault();
+
+        const vw  = window.innerWidth;
+        const vh  = window.innerHeight;
+        const bw  = btn.offsetWidth;
+        const bh  = btn.offsetHeight;
+        const pad = 20;
+
+        // Random new position, not same as current
+        const nx = Math.random() * (vw - bw - pad * 2) + pad;
+        const ny = Math.random() * (vh - bh - pad * 2) + pad;
+
+        btn.style.position   = 'fixed';
+        btn.style.left       = nx + 'px';
+        btn.style.top        = ny + 'px';
+        btn.style.margin     = '0';
+        btn.style.zIndex     = '10';
+        btn.style.transition = 'left 0.25s var(--ease-spring), top 0.25s var(--ease-spring)';
+      }, { passive: false });
+
+      function clampToViewport(x, y, w, h) {
+        const pad = 16;
+        return {
+          x: Math.max(pad, Math.min(window.innerWidth  - w - pad, x)),
+          y: Math.max(pad, Math.min(window.innerHeight - h - pad, y)),
+        };
+      }
+    })();
+
+    /* ============================================================
+       7. "YES" BUTTON — Celebration
+       ============================================================ */
+    function handleYes() {
+      const overlay  = document.getElementById('celebration');
+      const content  = document.getElementById('celebration-content');
+
+      overlay.classList.add('active');
+      overlay.setAttribute('aria-live', 'assertive');
+
+      // Animate content in
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          content.classList.add('visible');
+        });
+      });
+
+      // Spawn confetti
+      spawnConfetti(overlay, 180);
+
+      // Spawn rain hearts
+      let heartInterval = setInterval(() => spawnRainHeart(overlay), 220);
+      setTimeout(() => clearInterval(heartInterval), 8000);
+
+      // Focus for accessibility
+      overlay.focus();
+    }
+
+    /* ── Confetti ── */
+    function spawnConfetti(parent, count) {
+      const colors = [
+        '#F9C5D1','#E8829A','#D9CFEF','#A89DC4',
+        '#FFD6E0','#FFC8A2','#C3F0CA','#A0C4FF',
+      ];
+
+      for (let i = 0; i < count; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.cssText = `
+          left:      ${Math.random() * 100}%;
+          width:     ${Math.random() * 8 + 6}px;
+          height:    ${Math.random() * 8 + 6}px;
+          background:${colors[Math.floor(Math.random() * colors.length)]};
+          --fall-dur:   ${(Math.random() * 3 + 2).toFixed(2)}s;
+          --fall-delay: ${(Math.random() * 2).toFixed(2)}s;
+          border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+        `;
+        parent.appendChild(piece);
+        // Clean up after animation
+        piece.addEventListener('animationend', () => piece.remove());
+      }
+    }
+
+    /* ── Rain hearts ── */
+    function spawnRainHeart(parent) {
+      const hearts = ['🫶','🥰','😍','😊','☺️'];
+      const h      = document.createElement('span');
+      h.className  = 'rain-heart';
+      h.textContent= hearts[Math.floor(Math.random() * hearts.length)];
+      h.style.cssText = `
+        left:      ${Math.random() * 95}%;
+        font-size: ${Math.random() * 1.5 + 1}rem;
+        --rain-dur:   ${(Math.random() * 3 + 3).toFixed(2)}s;
+        --rain-delay: 0s;
+      `;
+      parent.appendChild(h);
+      h.addEventListener('animationend', () => h.remove());
+    }
+
+    /* ============================================================
+       8. SMOOTH SCROLL for internal links
+       ============================================================ */
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', function (e) {
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+  </script>
+
+</body>
+</html>
