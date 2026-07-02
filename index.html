@@ -346,19 +346,17 @@
     }
 
     /* ── Scroll indicator ────────────────────────────────────── */
-    #scroll-indicator {
-      position: absolute;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      opacity: 0;
-      animation: heroFadeUp 1s 1.3s var(--ease-out-expo) forwards;
-    }
+   #scroll-indicator {
+  position: absolute;
+  bottom: 32px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: fit-content;
+  z-index: 2;
+  ...
+}
+
 
     .scroll-label {
       font-size: 0.65rem;
