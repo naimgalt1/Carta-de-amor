@@ -265,7 +265,7 @@
       font-weight: 600;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--rose);
+      color: var(--text-main);
       background: rgba(255,255,255,0.12);
       border: 1px solid rgba(255,255,255,0.25);
       backdrop-filter: blur(8px);
@@ -938,6 +938,13 @@
     }
   </style>
 </head>
+<script>
+document.querySelectorAll('#hero *').forEach(function(el) {
+  if (el.getBoundingClientRect().right > window.innerWidth) {
+    el.style.outline = '4px solid red';
+  }
+});
+</script>
 
 <body>
 
@@ -965,10 +972,10 @@
     <!-- Hero text -->
     <div id="hero-content" role="banner">
 
-      <!-- CAMBIAR TEXTO: Eyebrow label -->
+
       <p class="hero-eyebrow" aria-hidden="true">
-        <span>✨</span>
-        <span>Para una colombiana muy especial</span>
+        <span>😍</span>
+        <span>Para una rola muy especial</span>
       </p>
 
       <!-- CAMBIAR TEXTO: Título Hero -->
