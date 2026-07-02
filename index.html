@@ -936,19 +936,6 @@
     }
   </style>
 </head>
-<script>
-  const docWidth = document.documentElement.scrollWidth;
-  const winWidth = window.innerWidth;
-  alert('scrollWidth: ' + docWidth + ' / innerWidth: ' + winWidth);
-
-  document.querySelectorAll('body *').forEach(function(el) {
-    if (el.getBoundingClientRect().right > winWidth + 1) {
-      el.style.outline = '4px solid red';
-      console.log('Overflow:', el);
-    }
-  });
-</script>
-
 
 <body>
 
